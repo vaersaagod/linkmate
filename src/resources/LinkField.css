@@ -1,0 +1,48 @@
+.linkfield.withSettings {
+  padding: 15px;
+  border: 1px solid rgba(0, 0, 20, 0.1);
+}
+
+.linkfield .field {
+  margin: 15px 0;
+}
+
+.linkfield--field {
+  display: table;
+  width: 100%;
+}
+
+.linkfield--type,
+.linkfield--typeOptions,
+.linkfield--target {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.linkfield--target {
+  padding-left: 10px;
+  white-space: nowrap;
+}
+
+.linkfield--typeOptions {
+  width: 100%;
+  padding-left: 10px;
+}
+
+.linkfield--typeOptions.single {
+  padding-left: 0;
+}
+
+
+.linkfield--elementRow {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.linkfield--elementRowSelect {
+  flex: 1;
+}
+
+.linkfield--elementRowQuery {
+  width: 200px;
+}

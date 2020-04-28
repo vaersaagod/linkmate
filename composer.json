@@ -1,0 +1,43 @@
+{
+    "name": "vaersaagod/linkmate",
+    "description": "Let's hook you up, mate!",
+    "type": "craft-plugin",
+    "version": "1.0.0",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "linkmate",
+        "link"
+    ],
+    "support": {
+        "docs": "https://github.com/vaersaagod/linkmate/blob/master/README.md",
+        "issues": "https://github.com/vaersaagod/linkmate/issues"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Værsågod",
+            "homepage": "https://www.vaersaagod.no/"
+        }
+    ],
+    "require": {
+        "craftcms/cms": "^3.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "vaersaagod\\linkmate\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "LinkMate",
+        "handle": "linkmate",
+        "hasCpSettings": false,
+        "hasCpSection": false,
+        "changelogUrl": "https://raw.githubusercontent.com/vaersaagod/linkmate/master/CHANGELOG.md",
+        "components": {
+        },
+        "class": "vaersaagod\\linkmate\\LinkMate"
+    }
+}
