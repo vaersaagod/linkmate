@@ -8,6 +8,7 @@ use craft\base\Field;
 use craft\helpers\Json;
 use Exception;
 use Throwable;
+use vaersaagod\linkmate\helpers\MigrateHelper;
 use vaersaagod\linkmate\LinkMate;
 use vaersaagod\linkmate\models\Link;
 use vaersaagod\linkmate\models\LinkTypeInterface;
@@ -144,6 +145,8 @@ class LinkField extends Field
             // Finally, if it is an array it is a serialized value
             $attr += $value;
         }
+        
+        $attr = MigrateHelper::sanitize($attr);
 
         if (isset($attr['type']) && !$this->isAllowedLinkType($attr['type'])) {
             $attr['type'] = null;
@@ -168,7 +171,7 @@ class LinkField extends Field
             ARRAY_FILTER_USE_KEY
         ));
     }
-
+    
     /**
      * @return LinkTypeInterface[]
      */
