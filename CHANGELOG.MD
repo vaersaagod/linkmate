@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Added  
+- Added the "UI Mode" field setting, with "Normal" and "Compact" options  
+
 ### Changed
 - Changed the "Url" link type label to "URL"
 

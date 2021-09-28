@@ -1,4 +1,4 @@
-{% import '_includes/forms' as forms %}
+{% import "_includes/forms" as forms %}
 
 {% do view.registerAssetBundle('vaersaagod\\linkmate\\utilities\\CpAdminAssetBundle') %}
 {% set group = '' %}
@@ -53,6 +53,18 @@
     {%- endfor -%}
   </div>
 </div>
+
+{{ forms.selectField({
+  label: 'UI Mode'|t('app'),
+  instructions: 'How the field should be presented in the control panel.'|t('linkmate'),
+  id: 'ui-mode',
+  name: 'uiMode',
+  options: [
+    {label: 'Normal'|t('linkmate'), value: 'normal'},
+    {label: 'Compact'|t('linkmate'), value: 'compact'},
+  ],
+  value: settings.uiMode,
+}) }}
 
 {% js %}
   new LinkFieldAdmin("{{ nameNs }}");

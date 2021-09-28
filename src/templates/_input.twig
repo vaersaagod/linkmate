@@ -4,7 +4,9 @@
 
 {% set type = singleType ? singleType : ( value.type is defined and value.type ? value.type : null) %}
 
-<div class="linkfield{% if hasSettings %} withSettings{% endif %}" id="{{ name }}">
+{% set uiMode = settings.uiMode|default %}
+
+<div class="linkfield{% if hasSettings and uiMode != 'compact' %} withSettings{% endif %}" id="{{ name }}">
   {% if linkNames|length == 0 %}
     <p>{{ 'No link types available.'|t('linkmate') }}</p>
   {% else %}

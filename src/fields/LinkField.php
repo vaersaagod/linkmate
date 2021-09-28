@@ -21,6 +21,17 @@ use yii\db\Schema;
  */
 class LinkField extends Field
 {
+
+    /**
+     * @var string
+     */
+    const UI_MODE_NORMAL = 'normal';
+
+    /**
+     * @var string
+     */
+    const UI_MODE_COMPACT = 'compact';
+
     /**
      * @var bool
      */
@@ -65,6 +76,11 @@ class LinkField extends Field
      * @var array
      */
     public $typeSettings = array();
+
+    /**
+     * @var string
+     */
+    public $uiMode = self::UI_MODE_NORMAL;
 
     /**
      * @var bool
