@@ -72,7 +72,7 @@ class LinkMate extends Plugin
     {
         $result = [
             'url' => new InputLinkType([
-                'displayName' => 'Url',
+                'displayName' => 'URL',
                 'displayGroup' => 'Input fields',
                 'inputType' => 'url'
             ]),

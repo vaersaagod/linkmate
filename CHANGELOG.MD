@@ -1,5 +1,10 @@
 # Release Notes for LinkMate
 
+## Unreleased
+
+### Changed
+- Changed the "Url" link type label to "URL"
+
 ## 1.0.1 - 2020-06-17
 
 ### Added
