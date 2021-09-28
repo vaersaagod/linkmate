@@ -1,6 +1,6 @@
 # Release Notes for LinkMate
 
-## Unreleased
+## 1.1.0 - 2021-09-28
 
 ### Added  
 - Added the "UI Mode" field setting, with "Normal" and "Compact" options  
