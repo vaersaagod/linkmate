@@ -1,6 +1,6 @@
 # Release Notes for LinkMate
 
-## Unreleased
+## 2.0.1 - 2022-05-06
 
 ### Fixed
 - Fixes a PHP exception that would be thrown if there wasn't an element selected for a link field  
