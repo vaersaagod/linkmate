@@ -1,5 +1,10 @@
 # Release Notes for LinkMate
 
+## 2.0.0 - 2022-05-06
+
+### Added  
+- Added Craft 4 support
+
 ## 1.1.0 - 2021-09-28
 
 ### Added  
