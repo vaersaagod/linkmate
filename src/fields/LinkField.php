@@ -17,7 +17,13 @@ use yii\db\Schema;
 
 /**
  * Class LinkField
+ *
  * @package vaersaagod\linkmate\fields
+ *
+ * @property-read array[]             $elementValidationRules
+ * @property-read string              $contentColumnType
+ * @property-read LinkTypeInterface[] $allowedLinkTypes
+ * @property-read string              $settingsHtml
  */
 class LinkField extends Field
 {
@@ -25,71 +31,72 @@ class LinkField extends Field
     /**
      * @var string
      */
-    const UI_MODE_NORMAL = 'normal';
+    public const UI_MODE_NORMAL = 'normal';
 
     /**
      * @var string
      */
-    const UI_MODE_COMPACT = 'compact';
+    public const UI_MODE_COMPACT = 'compact';
 
     /**
      * @var bool
      */
-    public $allowCustomText = true;
+    public bool $allowCustomText = true;
 
     /**
      * @var string|array
      */
-    public $allowedLinkNames = '*';
+    public string|array $allowedLinkNames = '*';
 
     /**
      * @var bool
      */
-    public $allowTarget = false;
+    public bool $allowTarget = false;
 
     /**
      * @var bool
      */
-    public $autoNoReferrer = false;
+    public bool $autoNoReferrer = false;
 
     /**
      * @var string
      */
-    public $defaultLinkName = '';
+    public string $defaultLinkName = '';
 
     /**
      * @var string
      */
-    public $defaultText = '';
+    public string $defaultText = '';
 
     /**
      * @var bool
      */
-    public $enableAriaLabel = false;
+    public bool $enableAriaLabel = false;
 
     /**
      * @var bool
      */
-    public $enableTitle = false;
+    public bool $enableTitle = false;
 
     /**
      * @var array
      */
-    public $typeSettings = array();
+    public array $typeSettings = [];
 
     /**
      * @var string
      */
-    public $uiMode = self::UI_MODE_NORMAL;
+    public string $uiMode = self::UI_MODE_NORMAL;
 
     /**
      * @var bool
      */
-    private $isStatic = false;
+    private bool $isStatic = false;
 
 
     /**
      * @param bool $isNew
+     *
      * @return bool
      */
     public function beforeSave(bool $isNew): bool
@@ -112,6 +119,7 @@ class LinkField extends Field
     /**
      * Get Content Column Type
      * Used to set the correct column type in the DB
+     *
      * @return string
      */
     public function getContentColumnType(): string
@@ -120,11 +128,12 @@ class LinkField extends Field
     }
 
     /**
-     * @param $value
+     * @param mixed                 $value
      * @param ElementInterface|null $element
-     * @return Link
+     *
+     * @return mixed
      */
-    public function normalizeValue($value, ElementInterface $element = null)
+    public function normalizeValue(mixed $value, ?ElementInterface $element = null): mixed
     {
         if ($value instanceof Link) {
             return $value;
@@ -142,9 +151,8 @@ class LinkField extends Field
                 if (is_array($decodedValue)) {
                     $attr += $decodedValue;
                 }
-            } catch (Exception $e) {
+            } catch (Exception) {
             }
-
         } else if (is_array($value) && isset($value['isCpFormData'])) {
             // If it is an array and the field `isCpFormData` is set, we are saving a cp form
             $attr += [
@@ -156,12 +164,11 @@ class LinkField extends Field
                 'type' => isset($value['type']) ? $value['type'] : null,
                 'value' => $this->getLinkValue($value)
             ];
-
         } else if (is_array($value)) {
             // Finally, if it is an array it is a serialized value
             $attr += $value;
         }
-        
+
         $attr = MigrateHelper::sanitize($attr);
 
         if (isset($attr['type']) && !$this->isAllowedLinkType($attr['type'])) {
@@ -171,7 +178,7 @@ class LinkField extends Field
 
         return new Link(array_filter(
             $attr,
-            function ($key) {
+            static function($key) {
                 return in_array($key, [
                     'ariaLabel',
                     'customQuery',
@@ -187,7 +194,7 @@ class LinkField extends Field
             ARRAY_FILTER_USE_KEY
         ));
     }
-    
+
     /**
      * @return LinkTypeInterface[]
      */
@@ -204,9 +211,11 @@ class LinkField extends Field
             $allowedLinkNames = [$allowedLinkNames];
         }
 
-        return array_filter($linkTypes, function ($linkTypeName) use ($allowedLinkNames) {
-            return in_array($linkTypeName, $allowedLinkNames, true);
-        }, ARRAY_FILTER_USE_KEY);
+        return array_filter($linkTypes,
+            static function($linkTypeName) use ($allowedLinkNames) {
+                return in_array($linkTypeName, $allowedLinkNames, true);
+            },
+            ARRAY_FILTER_USE_KEY);
     }
 
     /**
@@ -220,8 +229,9 @@ class LinkField extends Field
     }
 
     /**
-     * @param Link $value
+     * @param Link                  $value
      * @param ElementInterface|null $element
+     *
      * @return string
      * @throws Throwable
      */
@@ -240,7 +250,7 @@ class LinkField extends Field
         if (
             !empty($this->defaultLinkName) &&
             array_key_exists($this->defaultLinkName, $linkTypes) &&
-            $value->isEmpty() 
+            $value->isEmpty()
         ) {
             $value->type = $this->defaultLinkName;
         }
@@ -266,8 +276,9 @@ class LinkField extends Field
     }
 
     /**
-     * @param string $linkTypeName
+     * @param string            $linkTypeName
      * @param LinkTypeInterface $linkType
+     *
      * @return array
      */
     public function getLinkTypeSettings(string $linkTypeName, LinkTypeInterface $linkType): array
@@ -292,7 +303,6 @@ class LinkField extends Field
         $allowedLinkNames = $settings['allowedLinkNames'];
         $linkTypes = [];
         $linkNames = [];
-        $linkSettings = [];
 
         $allTypesAllowed = false;
         if (!is_array($allowedLinkNames)) {
@@ -306,21 +316,20 @@ class LinkField extends Field
             }
         }
 
-        foreach (LinkMate::getInstance()->getLinkTypes() as $linkTypeName => $linkType) {
-            $linkTypes[] = array(
+        foreach (LinkMate::getInstance()?->getLinkTypes() as $linkTypeName => $linkType) {
+            $linkTypes[] = [
                 'displayName' => $linkType->getDisplayName(),
                 'enabled' => $allTypesAllowed || (is_array($allowedLinkNames) && in_array($linkTypeName, $allowedLinkNames, true)),
                 'name' => $linkTypeName,
                 'group' => $linkType->getDisplayGroup(),
                 'settings' => $linkType->getSettingsHtml($linkTypeName, $this),
-            );
+            ];
 
             $linkNames[$linkTypeName] = $linkType->getDisplayName();
-            $linkSettings[] = $linkType->getSettingsHtml($linkTypeName, $this);
         }
 
         asort($linkNames);
-        usort($linkTypes, static function ($a, $b) {
+        usort($linkTypes, static function($a, $b) {
             return $a['group'] === $b['group']
                 ? strcmp($a['displayName'], $b['displayName'])
                 : strcmp($a['group'], $b['group']);
@@ -369,8 +378,9 @@ class LinkField extends Field
     }
 
     /**
-     * @param $value
+     * @param                  $value
      * @param ElementInterface $element
+     *
      * @return bool
      */
     public function isValueEmpty($value, ElementInterface $element): bool
@@ -384,21 +394,24 @@ class LinkField extends Field
 
     /**
      * @param string $type
+     *
      * @return bool
      */
-    private function isAllowedLinkType($type): bool
+    private function isAllowedLinkType(string $type): bool
     {
         $allowedLinkTypes = $this->getAllowedLinkTypes();
+
         return array_key_exists($type, $allowedLinkTypes);
     }
 
     /**
      * @param array $data
+     *
      * @return mixed
      */
-    private function getLinkValue(array $data)
+    private function getLinkValue(array $data): mixed
     {
-        $linkTypes = LinkMate::getInstance()->getLinkTypes();
+        $linkTypes = LinkMate::getInstance()?->getLinkTypes();
         $type = $data['type'];
         if (!array_key_exists($type, $linkTypes)) {
             return null;

@@ -2,7 +2,6 @@
 
 namespace vaersaagod\linkmate;
 
-use Craft;
 use craft\base\Plugin;
 use craft\elements\Asset;
 use craft\elements\Category;
@@ -27,18 +26,18 @@ class LinkMate extends Plugin
     /**
      * @var LinkTypeInterface[]
      */
-    private $linkTypes;
+    private array $linkTypes;
 
     /**
      * @event events\LinkTypeEvent
      */
-    const EVENT_REGISTER_LINK_TYPES = 'registerLinkTypes';
+    public const EVENT_REGISTER_LINK_TYPES = 'registerLinkTypes';
 
 
     /**
      * @return void
      */
-    public function init()
+    public function init(): void
     {
         parent::init();
 
@@ -52,7 +51,7 @@ class LinkMate extends Plugin
     /**
      * @return LinkTypeInterface[]
      */
-    public function getLinkTypes()
+    public function getLinkTypes(): array
     {
         if (!isset($this->linkTypes)) {
             $event = new LinkTypeEvent();
@@ -68,7 +67,7 @@ class LinkMate extends Plugin
     /**
      * @return LinkTypeInterface[]
      */
-    private function createDefaultLinkTypes()
+    private function createDefaultLinkTypes(): array
     {
         $result = [
             'url' => new InputLinkType([
@@ -113,19 +112,13 @@ class LinkMate extends Plugin
             ]),
         ];
 
-        // Add craft commerce elements
-        if (class_exists('craft\commerce\elements\Product')) {
+        // Add craft commerce elements if commerce is installed
+        $commerce = \Craft::$app->plugins->getPlugin('commerce');
+
+        if ($commerce instanceof  \craft\commerce\elements\Product) {
             $result['craftCommerce-product'] = new ElementLinkType([
                 'displayGroup' => 'Craft commerce',
-                'elementType' => 'craft\commerce\elements\Product'
-            ]);
-        }
-
-        // Add solspace calendar elements
-        if (class_exists('Solspace\Calendar\Elements\Event')) {
-            $result['solspaceCalendar-event'] = new ElementLinkType([
-                'displayGroup' => 'Solspace calendar',
-                'elementType' => 'Solspace\Calendar\Elements\Event'
+                'elementType' => \craft\commerce\elements\Product::class
             ]);
         }
 
@@ -135,7 +128,7 @@ class LinkMate extends Plugin
     /**
      * @param RegisterComponentTypesEvent $event
      */
-    public function onRegisterFieldTypes(RegisterComponentTypesEvent $event)
+    public function onRegisterFieldTypes(RegisterComponentTypesEvent $event): void
     {
         $event->types[] = LinkField::class;
     }

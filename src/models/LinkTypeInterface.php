@@ -29,24 +29,26 @@ interface LinkTypeInterface
   /**
    * @param Link $link
    * @param bool $ignoreStatus
+   *
    * @return null|ElementInterface
    */
-  public function getElement(Link $link, $ignoreStatus = false);
+  public function getElement(Link $link, bool $ignoreStatus = false): ?ElementInterface;
 
-  /**
-   * @param string $linkTypeName
-   * @param LinkField $field
-   * @param Link $value
-   * @param ElementInterface $element|null
-   * @return string
-   */
+    /**
+     * @param string                $linkTypeName
+     * @param LinkField             $field
+     * @param Link                  $value
+     * @param ElementInterface|null $element |null
+     *
+     * @return string
+     */
   public function getInputHtml(string $linkTypeName, LinkField $field, Link $value, ElementInterface $element = null): string;
 
   /**
    * @param mixed $value
    * @return mixed
    */
-  public function getLinkValue($value);
+  public function getLinkValue(mixed $value): mixed;
 
   /**
    * @param string $linkTypeName
@@ -59,20 +61,21 @@ interface LinkTypeInterface
    * @param Link $link
    * @return null|string
    */
-  public function getText(Link $link);
+  public function getText(Link $link): ?string;
 
   /**
    * @param Link $link
    * @return null|string
    */
-  public function getUrl(Link $link);
+  public function getUrl(Link $link): ?string;
 
   /**
    * @param Link $link
    * @param bool $ignoreStatus
+   *
    * @return bool
    */
-  public function hasElement(Link $link, $ignoreStatus = false): bool;
+  public function hasElement(Link $link, bool $ignoreStatus = false): bool;
 
   /**
    * @param Link $link
@@ -91,5 +94,5 @@ interface LinkTypeInterface
    * @param Link $link
    * @return array|null
    */
-  public function validateValue(LinkField $field, Link $link);
+  public function validateValue(LinkField $field, Link $link): ?array;
 }

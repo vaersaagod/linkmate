@@ -12,141 +12,152 @@ use yii\helpers\ArrayHelper;
  */
 class ElementSourceValidator
 {
-  /**
-   * @var array
-   */
-  private $availableSources;
+    /**
+     * @var array
+     */
+    private array $availableSources;
 
-  /**
-   * @var ElementSourceValidator[]
-   */
-  private static $validators = array();
+    /**
+     * @var ElementSourceValidator[]
+     */
+    private static array $validators = [];
 
 
-  /**
-   * ElementSourceValidator constructor.
-   * @param ElementInterface $elementType
-   * @throws Exception
-   */
-  public function __construct($elementType) {
-    $idPath = self::getElementIdPath($elementType);
-    if (is_null($idPath)) {
-      throw new Exception('Unsupported element type: ' . (string)$elementType);
+    /**
+     * ElementSourceValidator constructor.
+     *
+     * @param ElementInterface $elementType
+     *
+     * @throws Exception
+     */
+    public function __construct(ElementInterface $elementType)
+    {
+        $idPath = self::getElementIdPath($elementType);
+        if (is_null($idPath)) {
+            throw new Exception('Unsupported element type: '.(string)$elementType);
+        }
+
+        $availableSources = [];
+        foreach ($elementType::sources('index') as $source) {
+            if (!array_key_exists('key', $source)) {
+                continue;
+            }
+
+            $id = ArrayHelper::getValue($source, $idPath);
+            if (is_null($id)) {
+                continue;
+            }
+
+            $availableSources[] = [
+                'key' => $source['key'],
+                'id' => $id,
+            ];
+        }
+
+        $this->availableSources = $availableSources;
     }
 
-    $availableSources = array();
-    foreach ($elementType::sources() as $source) {
-      if (!array_key_exists('key', $source)) {
-        continue;
-      }
+    /**
+     * @param array $originalSources
+     *
+     * @return array
+     */
+    public function validate(array $originalSources): array
+    {
+        $resolvedSources = [];
 
-      $id = ArrayHelper::getValue($source, $idPath);
-      if (is_null($id)) {
-        continue;
-      }
+        foreach ($originalSources as $originalSource) {
+            $resolvedSource = $this->validateSource($originalSource);
+            if (!is_null($resolvedSource)) {
+                $resolvedSources[] = $resolvedSource;
+            }
+        }
 
-      $availableSources[] = array(
-        'key' => $source['key'],
-        'id'  => $id,
-      );
+        return $resolvedSources;
     }
 
-    $this->availableSources = $availableSources;
-  }
+    /**
+     * @param string $originalSource
+     *
+     * @return null|string
+     */
+    private function validateSource(string $originalSource): ?string
+    {
+        $maybeSource = null;
 
-  /**
-   * @param array $originalSources
-   * @return array
-   */
-  public function validate($originalSources) {
-    $resolvedSources = array();
+        // Fetch id from source. If we don't find one, this is not referring
+        // to an actual source (e.g. `*`) so leave it untouched.
+        $originalId = self::getIdFromSource($originalSource);
+        if (is_null($originalId)) {
+            return $originalSource;
+        }
 
-    foreach ($originalSources as $originalSource) {
-      $resolvedSource = $this->validateSource($originalSource);
-      if (!is_null($resolvedSource)) {
-        $resolvedSources[] = $resolvedSource;
-      }
+        // Check all sources
+        foreach ($this->availableSources as $availableSource) {
+            // Perfect key match, just resolve
+            if ($availableSource['key'] == $originalSource) {
+                return $originalSource;
+            }
+
+            // Check for section id match
+            if ($availableSource['id'] == $originalId) {
+                $maybeSource = $availableSource;
+            }
+        }
+
+        // Did not find a perfect match, return the maybe hit
+        return is_null($maybeSource)
+            ? null
+            : $maybeSource['key'];
     }
 
-    return $resolvedSources;
-  }
+    /**
+     * @param ElementInterface $elementType
+     * @param array            $sources
+     *
+     * @return array
+     */
+    public static function apply(ElementInterface $elementType, array $sources): array
+    {
+        try {
+            if (!array_key_exists($elementType, self::$validators)) {
+                self::$validators[(string)$elementType] = new ElementSourceValidator($elementType);
+            }
 
-  /**
-   * @param string $originalSource
-   * @return null|string
-   */
-  private function validateSource($originalSource) {
-    $maybeSource = null;
+            return self::$validators[(string)$elementType]->validate($sources);
+        } catch (Throwable) {
+        }
 
-    // Fetch id from source. If we don't find one, this is not referring
-    // to an actual source (e.g. `*`) so leave it untouched.
-    $originalId = self::getIdFromSource($originalSource);
-    if (is_null($originalId)) {
-      return $originalSource;
+        return $sources;
     }
 
-    // Check all sources
-    foreach ($this->availableSources as $availableSource) {
-      // Perfect key match, just resolve
-      if ($availableSource['key'] == $originalSource) {
-        return $originalSource;
-      }
-
-      // Check for section id match
-      if ($availableSource['id'] == $originalId) {
-        $maybeSource = $availableSource;
-      }
+    /**
+     * @param ElementInterface $elementType
+     *
+     * @return array|null
+     */
+    public static function getElementIdPath(ElementInterface $elementType): ?array
+    {
+        return match ($elementType) {
+            'craft\\elements\\Asset' => ['criteria', 'folderId'],
+            'craft\\elements\\Category' => ['criteria', 'groupId'],
+            'craft\\elements\\Entry' => ['criteria', 'sectionId'],
+            default => null,
+        };
     }
 
-    // Did not find a perfect match, return the maybe hit
-    return is_null($maybeSource)
-      ? null
-      : $maybeSource['key'];
-  }
+    /**
+     * @param string $originalSource
+     *
+     * @return null|string
+     */
+    public static function getIdFromSource(string $originalSource): ?string
+    {
+        $idOffset = strpos($originalSource, ':');
+        if ($idOffset === false) {
+            return null;
+        }
 
-  /**
-   * @param ElementInterface $elementType
-   * @param array $sources
-   * @return array
-   */
-  public static function apply($elementType, $sources) {
-    try {
-      if (!array_key_exists($elementType, self::$validators)) {
-        self::$validators[(string)$elementType] = new ElementSourceValidator($elementType);
-      }
-      return self::$validators[(string)$elementType]->validate($sources);
-    } catch (Throwable $e) { }
-
-    return $sources;
-  }
-
-  /**
-   * @param ElementInterface $elementType
-   * @return array|null
-   */
-  public static function getElementIdPath($elementType) {
-    switch ($elementType) {
-      case 'craft\\elements\\Asset':
-        return array('criteria', 'folderId');
-      case 'craft\\elements\\Category':
-        return array('criteria', 'groupId');
-      case 'craft\\elements\\Entry':
-        return array('criteria', 'sectionId');
+        return substr($originalSource, $idOffset + 1);
     }
-
-    return null;
-  }
-
-  /**
-   * @param string $originalSource
-   * @return null|string
-   */
-  public static function getIdFromSource($originalSource) {
-    $idOffset = strpos($originalSource, ':');
-    if ($idOffset === false) {
-      return null;
-    }
-
-    return substr($originalSource, $idOffset + 1);
-  }
 }

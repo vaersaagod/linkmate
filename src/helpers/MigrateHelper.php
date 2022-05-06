@@ -12,7 +12,7 @@ use Craft;
  */
 class MigrateHelper
 {
-    const TYPE_MAP = [
+    public const TYPE_MAP = [
         'fruitstudios\\linkit\\models\\Entry' => 'entry',
         'fruitstudios\\linkit\\models\\Category' => 'category',
         'fruitstudios\\linkit\\models\\Asset' => 'asset',
@@ -24,8 +24,10 @@ class MigrateHelper
 
     /**
      * @param array $values
+     *
+     * @return array
      */
-    public static function sanitize($values): array
+    public static function sanitize(array $values): array
     {
         // If there isn't a type, something is wrong, and we can't do much more
         if (!isset($values['type'])) {
@@ -54,7 +56,7 @@ class MigrateHelper
         }
         
         // Custom url's in LinkIt for Craft 2 are special
-        if (isset($values['type']) && $values['type'] === 'custom' && isset($values['custom'])) {
+        if (isset($values['type'], $values['custom']) && $values['type'] === 'custom') {
             $values['type'] = 'url';
             $values['value'] = $values['custom'];
             unset($values['custom']);
