@@ -74,12 +74,12 @@ class Link extends Model
     /**
      * @var LinkField|null
      */
-    private mixed $linkField;
+    private ?LinkField $linkField;
 
     /**
      * @var ElementInterface|null
      */
-    private mixed $owner;
+    private ?ElementInterface $owner;
 
 
     /**
