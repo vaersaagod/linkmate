@@ -67,9 +67,9 @@ class Link extends Model
     public mixed $value;
 
     /**
-     * @var ElementInterface
+     * @var ElementInterface|null
      */
-    private ElementInterface $prefetchedElement;
+    private ?ElementInterface $prefetchedElement;
 
     /**
      * @var LinkField|null
