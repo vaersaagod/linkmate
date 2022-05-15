@@ -1,5 +1,9 @@
 # Release Notes for LinkMate
 
+## 2.0.2 - 2022-05-15
+### Fixed
+- Fixes a PHP exception that could occur when saving a link field
+
 ## 2.0.1 - 2022-05-06
 
 ### Fixed

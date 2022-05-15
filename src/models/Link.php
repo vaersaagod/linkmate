@@ -64,7 +64,7 @@ class Link extends Model
     /**
      * @var mixed
      */
-    public mixed $value;
+    public mixed $value = null;
 
     /**
      * @var ElementInterface|null
