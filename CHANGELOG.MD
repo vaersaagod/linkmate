@@ -1,5 +1,15 @@
 # Release Notes for LinkMate
 
+## 2.1.0 - 2022-05-27  
+### Added
+- Added the "Show site menu" setting to the element link type, making it possible to link across sites to non-propagated elements (excepting users).  
+
+### Improved
+- Elements are now queried using element query param methods instead of criteria arrays, which should improve reliability for automatic template cache invalidation.  
+
+### Changed
+- Moved the `schemaVersion` definition into the main plugin class  
+
 ## 2.0.2 - 2022-05-15
 ### Fixed
 - Fixes a PHP exception that could occur when saving a link field

@@ -11,9 +11,21 @@
 })}}
 
 {{ forms.checkboxField({
-  label: 'Allow users to enter custom query strings and/or anchors that will be appended to the url'|t('linkmate'),
+  label: 'Allow users to enter custom query strings and/or anchors that will be appended to the URL'|t('linkmate'),
   name: 'allowCustomQuery',
   id: 'typeSettings-'~linkTypeName~'-allowCustomQuery',
   name: 'typeSettings['~linkTypeName~'][allowCustomQuery]',
   checked: settings.allowCustomQuery
 }) }}
+
+{% if elementName|lower != 'user' %}
+  {{ forms.checkboxField({
+    fieldset: true,
+    label: 'Show the site menu'|t('app'),
+    instructions: 'Whether the site menu should be shown for {type} selection modals.'|t('site', { type: elementName|lower }),
+    warning: 'Relations don’t store the selected site, so this should only be enabled if some {type} aren’t propagated to all sites.'|t('app', { type: pluralElementName|lower }),
+    id: 'typeSettings-'~linkTypeName~'-showSiteMenu',
+    name: 'typeSettings['~linkTypeName~'][showSiteMenu]',
+    checked: settings.showSiteMenu|default(false)
+  }) }}
+{% endif %}

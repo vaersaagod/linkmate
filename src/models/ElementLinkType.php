@@ -51,6 +51,7 @@ class ElementLinkType extends Model implements LinkTypeInterface
     {
         return [
             'allowCustomQuery' => false,
+            'showSiteMenu' => false,
             'sources' => '*',
         ];
     }
@@ -61,8 +62,16 @@ class ElementLinkType extends Model implements LinkTypeInterface
     public function getDisplayName(): string
     {
         $elementType = $this->elementType;
-
         return $elementType::displayName();
+    }
+
+    /**
+     * @return string
+     */
+    public function getPluralDisplayName(): string
+    {
+        $elementType = $this->elementType;
+        return $elementType::pluralDisplayName();
     }
 
     /**
@@ -82,20 +91,33 @@ class ElementLinkType extends Model implements LinkTypeInterface
             return null;
         }
 
-        $query = [
-            'id' => $link->value,
-            'site' => $link->getOwnerSite(),
-        ];
+        $elementId = (int)($link->value ?? null);
 
-        if ($ignoreStatus || Craft::$app->request->getIsCpRequest()) {
-            $query += [
-                'status' => null,
-            ];
+        if (!$elementId) {
+            return null;
         }
 
         $elementType = $this->elementType;
+        $ownerSiteId = (int)$link->getOwnerSite()->id;
 
-        return $elementType::findOne($query);
+        $query = $elementType::find()
+            ->id($elementId);
+
+        $settings = $link->getLinkField()?->getLinkTypeSettings($this->getDisplayName(), $this) ?? [];
+        if ($settings['showSiteMenu']) {
+            $query
+                ->siteId('*')
+                ->unique()
+                ->preferSites([$ownerSiteId]);
+        } else {
+            $query->siteId($ownerSiteId);
+        }
+
+        if ($ignoreStatus || Craft::$app->request->getIsCpRequest()) {
+            $query->status(null);
+        }
+
+        return $query->one();
     }
 
     /**
@@ -131,6 +153,7 @@ class ElementLinkType extends Model implements LinkTypeInterface
             'name' => $field->handle.'['.$linkTypeName.']',
             'storageKey' => 'field.'.$field->handle,
             'sources' => $sources === '*' ? null : $sources,
+            'showSiteMenu' => true,
         ];
 
         $queryFieldOptions = null;
@@ -197,10 +220,12 @@ class ElementLinkType extends Model implements LinkTypeInterface
      */
     public function getSettingsHtml(string $linkTypeName, LinkField $field): string
     {
+
         try {
             return Craft::$app->view->renderTemplate('linkmate/_settings-element', [
                 'settings' => $field->getLinkTypeSettings($linkTypeName, $this),
                 'elementName' => $this->getDisplayName(),
+                'pluralElementName' => $this->getPluralDisplayName(),
                 'linkTypeName' => $linkTypeName,
                 'sources' => $this->getSources(),
             ]);

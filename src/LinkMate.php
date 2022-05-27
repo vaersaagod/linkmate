@@ -9,12 +9,14 @@ use craft\elements\Entry;
 use craft\elements\User;
 use craft\events\RegisterComponentTypesEvent;
 use craft\services\Fields;
+
 use vaersaagod\linkmate\events\LinkTypeEvent;
 use vaersaagod\linkmate\fields\LinkField;
 use vaersaagod\linkmate\models\ElementLinkType;
 use vaersaagod\linkmate\models\InputLinkType;
 use vaersaagod\linkmate\models\SiteLinkType;
 use vaersaagod\linkmate\models\LinkTypeInterface;
+
 use yii\base\Event;
 
 /**
@@ -115,12 +117,12 @@ class LinkMate extends Plugin
             ]),
         ];
 
-        // Add craft commerce elements if commerce is installed
+        // Add Craft Commerce elements if commerce is installed
         $commerce = \Craft::$app->plugins->getPlugin('commerce');
 
         if ($commerce instanceof  \craft\commerce\elements\Product) {
             $result['craftCommerce-product'] = new ElementLinkType([
-                'displayGroup' => 'Craft commerce',
+                'displayGroup' => 'Craft Commerce',
                 'elementType' => \craft\commerce\elements\Product::class
             ]);
         }

@@ -283,6 +283,7 @@ class LinkField extends Field
      */
     public function getLinkTypeSettings(string $linkTypeName, LinkTypeInterface $linkType): array
     {
+        $linkTypeName = strtolower($linkTypeName);
         $settings = $linkType->getDefaultSettings();
         if (array_key_exists($linkTypeName, $this->typeSettings)) {
             $settings = $linkType->validateSettings(
