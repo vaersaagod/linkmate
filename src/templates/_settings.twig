@@ -5,41 +5,47 @@
 
 <div class="linkFieldAdmin" id="{{ name }}">
     <div class="linkFieldAdmin--tabs">
+
         <div class="linkFieldAdmin--tabsRow selected" data-name="_general">
             <button class="linkFieldAdmin--tabsTab">{{ 'General settings'|t('linkmate') }}</button>
         </div>
 
-        <div class="linkFieldAdmin--tabsRow all">
-            <div class="linkFieldAdmin--tabsLightswitch">
-                {{- forms.lightswitch({
-                    name: 'allowedLinkNames[]',
-                    on: allTypesAllowed,
-                    value: '*',
-                }) -}}
-            </div>
-            {{ 'Enable all'|t('linkmate') }}
-        </div>
+        <div>
 
-        {%- for linkType in linkTypes -%}
-            {%- if linkType.group != group -%}
-                {%- set group = linkType.group -%}
-                <div class="linkFieldAdmin--tabsGroup">{{ group }}</div>
-            {%- endif -%}
+            {%- for linkType in linkTypes -%}
+                {%- if linkType.group != group -%}
+                    {%- set group = linkType.group -%}
+                    <div class="linkFieldAdmin--tabsGroup">{{ group }}</div>
+                {%- endif -%}
 
-            <div class="linkFieldAdmin--tabsRow" data-name="{{ linkType.name }}">
-                <div class="linkFieldAdmin--tabsLightswitch{% if allTypesAllowed %} hidden{% endif %}">
+                <div class="linkFieldAdmin--tabsRow" data-name="{{ linkType.name }}">
+                    <div class="linkFieldAdmin--tabsLightswitch{% if allTypesAllowed %} hidden{% endif %}">
+                        {{- forms.lightswitch({
+                            name: 'allowedLinkNames[]',
+                            on: linkType.enabled,
+                            value: linkType.name,
+                        }) -}}
+                    </div>
+
+                    <button class="linkFieldAdmin--tabsTab">
+                        {{- linkType.displayName -}}
+                    </button>
+                </div>
+            {%- endfor -%}
+
+            <div class="linkFieldAdmin--tabsRow all">
+                <div class="linkFieldAdmin--tabsLightswitch">
                     {{- forms.lightswitch({
                         name: 'allowedLinkNames[]',
-                        on: linkType.enabled,
-                        value: linkType.name,
+                        on: allTypesAllowed,
+                        value: '*',
                     }) -}}
                 </div>
-
-                <button class="linkFieldAdmin--tabsTab">
-                    {{- linkType.displayName -}}
-                </button>
+                {{ 'Enable all'|t('linkmate') }}
             </div>
-        {%- endfor -%}
+
+        </div>
+
     </div>
     <div class="linkFieldAdmin--body">
         <div class="linkFieldAdmin--bodyContent selected" data-name="_general">

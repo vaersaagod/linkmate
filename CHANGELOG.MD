@@ -1,5 +1,12 @@
 # Release Notes for LinkMate
 
+## 2.2.0 - 2022-05-27
+### Changed  
+- Changed default link type to "Entry"
+- All link types are now disabled by default, for new fields
+- Moved the "Enable all" toggle to the bottom of the link type settings list  
+- Tightened up the styles for the field settings a little bit  
+
 ## 2.1.0 - 2022-05-27  
 ### Added
 - Added the "Show site menu" setting to the element link type, making it possible to link across sites to non-propagated elements (excepting users).  

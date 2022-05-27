@@ -46,7 +46,7 @@ class LinkField extends Field
     /**
      * @var string|array
      */
-    public string|array $allowedLinkNames = '*';
+    public string|array $allowedLinkNames = [];
 
     /**
      * @var bool
