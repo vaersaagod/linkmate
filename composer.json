@@ -34,12 +34,7 @@
     "extra": {
         "name": "LinkMate",
         "handle": "linkmate",
-        "schemaVersion": "2.0.0",
-        "hasCpSettings": false,
-        "hasCpSection": false,
         "changelogUrl": "https://raw.githubusercontent.com/vaersaagod/linkmate/master/CHANGELOG.md",
-        "components": {
-        },
         "class": "vaersaagod\\linkmate\\LinkMate"
     }
 }

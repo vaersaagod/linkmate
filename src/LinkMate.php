@@ -28,6 +28,9 @@ class LinkMate extends Plugin
      */
     private array $linkTypes;
 
+    /** @var string */
+    public string $schemaVersion = '2.0.0';
+
     /**
      * @event events\LinkTypeEvent
      */
