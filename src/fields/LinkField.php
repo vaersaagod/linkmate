@@ -61,7 +61,7 @@ class LinkField extends Field
     /**
      * @var string
      */
-    public string $defaultLinkName = '';
+    public string $defaultLinkName = 'entry';
 
     /**
      * @var string
