@@ -1,8 +1,8 @@
 # Release Notes for LinkMate
 
-## Unreleased
+## 2.2.1 - 2022-05-02
 ### Fixed
-- Fixes an issue due to my dumb brain, where the site menu would always display regardless of the "Show site menu" option actually being checked or not FFS  
+- Fixes an issue where the site menu would always display in element selector modals, regardless of whether the "Show site menu" option was actually checked or not.  
 
 ## 2.2.0 - 2022-05-27
 ### Changed  
