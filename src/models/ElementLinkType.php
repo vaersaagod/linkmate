@@ -153,7 +153,7 @@ class ElementLinkType extends Model implements LinkTypeInterface
             'name' => $field->handle.'['.$linkTypeName.']',
             'storageKey' => 'field.'.$field->handle,
             'sources' => $sources === '*' ? null : $sources,
-            'showSiteMenu' => true,
+            'showSiteMenu' => $settings['showSiteMenu'] ?: false,
         ];
 
         $queryFieldOptions = null;

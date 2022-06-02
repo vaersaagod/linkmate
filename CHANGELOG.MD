@@ -1,5 +1,9 @@
 # Release Notes for LinkMate
 
+## Unreleased
+### Fixed
+- Fixes an issue due to my dumb brain, where the site menu would always display regardless of the "Show site menu" option actually being checked or not FFS  
+
 ## 2.2.0 - 2022-05-27
 ### Changed  
 - Changed default link type to "Entry"
