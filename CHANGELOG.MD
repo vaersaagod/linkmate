@@ -1,5 +1,9 @@
 # Release Notes for LinkMate
 
+## 2.2.2 - 2022-08-02
+### Fixed
+- Fixes typing issues in ElementSourceValidator
+
 ## 2.2.1 - 2022-05-02
 ### Fixed
 - Fixes an issue where the site menu would always display in element selector modals, regardless of whether the "Show site menu" option was actually checked or not.  

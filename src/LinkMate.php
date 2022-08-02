@@ -101,15 +101,15 @@ class LinkMate extends Plugin
             ]),
             'category' => new ElementLinkType([
                 'displayGroup' => 'Craft CMS',
-                'elementType' => Category::class
+                'elementType' => Category::class,
             ]),
             'entry' => new ElementLinkType([
                 'displayGroup' => 'Craft CMS',
-                'elementType' => Entry::class
+                'elementType' => Entry::class,
             ]),
             'user' => new ElementLinkType([
                 'displayGroup' => 'Craft CMS',
-                'elementType' => User::class
+                'elementType' => User::class,
             ]),
             'site' => new SiteLinkType([
                 'displayGroup' => 'Craft CMS',

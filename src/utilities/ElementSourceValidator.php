@@ -2,9 +2,9 @@
 
 namespace vaersaagod\linkmate\utilities;
 
-use craft\base\ElementInterface;
 use Exception;
 use Throwable;
+
 use yii\helpers\ArrayHelper;
 
 /**
@@ -26,15 +26,15 @@ class ElementSourceValidator
     /**
      * ElementSourceValidator constructor.
      *
-     * @param ElementInterface $elementType
+     * @param string $elementType The fully qualified element class path, e.g. craft\\elements\\Entry
      *
      * @throws Exception
      */
-    public function __construct(ElementInterface $elementType)
+    public function __construct(string $elementType)
     {
         $idPath = self::getElementIdPath($elementType);
         if (is_null($idPath)) {
-            throw new Exception('Unsupported element type: '.(string)$elementType);
+            throw new Exception('Unsupported element type: ' . (string)$elementType);
         }
 
         $availableSources = [];
@@ -112,12 +112,12 @@ class ElementSourceValidator
     }
 
     /**
-     * @param ElementInterface $elementType
-     * @param array            $sources
+     * @param string $elementType The fully qualified element class path, e.g. craft\\elements\\Entry
+     * @param array $sources
      *
      * @return array
      */
-    public static function apply(ElementInterface $elementType, array $sources): array
+    public static function apply(string $elementType, array $sources): array
     {
         try {
             if (!array_key_exists($elementType, self::$validators)) {
@@ -126,17 +126,18 @@ class ElementSourceValidator
 
             return self::$validators[(string)$elementType]->validate($sources);
         } catch (Throwable) {
+
         }
 
         return $sources;
     }
 
     /**
-     * @param ElementInterface $elementType
+     * @param string $elementType The fully qualified element class path, e.g. craft\\elements\\Entry
      *
      * @return array|null
      */
-    public static function getElementIdPath(ElementInterface $elementType): ?array
+    public static function getElementIdPath(string $elementType): ?array
     {
         return match ($elementType) {
             'craft\\elements\\Asset' => ['criteria', 'folderId'],

@@ -6,11 +6,14 @@ use Craft;
 use craft\base\ElementInterface;
 use craft\errors\SiteNotFoundException;
 use craft\helpers\Html;
+
 use Exception;
 use Throwable;
+
 use vaersaagod\linkmate\fields\LinkField;
 use vaersaagod\linkmate\utilities\ElementSourceValidator;
 use vaersaagod\linkmate\utilities\Url;
+
 use yii\base\Model;
 
 /**
@@ -24,25 +27,12 @@ use yii\base\Model;
  */
 class ElementLinkType extends Model implements LinkTypeInterface
 {
-    public ElementInterface|string $elementType;
-    public string $displayGroup = 'Common';
 
-    /**
-     * ElementLinkType constructor.
-     *
-     * @param string|array $elementType
-     * @param array        $options
-     */
-    public function __construct($elementType, array $options = [])
-    {
-        if (is_array($elementType)) {
-            $options = $elementType;
-        } else {
-            $options['elementType'] = $elementType;
-        }
-        
-        parent::__construct($options);
-    }
+    /** @var string The fully qualified element class path, e.g. craft\\elements\\Entry */
+    public string $elementType;
+
+    /** @var string */
+    public string $displayGroup = 'Common';
 
     /**
      * @return array
@@ -61,8 +51,7 @@ class ElementLinkType extends Model implements LinkTypeInterface
      */
     public function getDisplayName(): string
     {
-        $elementType = $this->elementType;
-        return $elementType::displayName();
+        return $this->elementType::displayName();
     }
 
     /**
@@ -70,8 +59,7 @@ class ElementLinkType extends Model implements LinkTypeInterface
      */
     public function getPluralDisplayName(): string
     {
-        $elementType = $this->elementType;
-        return $elementType::pluralDisplayName();
+        return $this->elementType::pluralDisplayName();
     }
 
     /**
