@@ -21,7 +21,7 @@
 
 		onChangeType: function(e) {
 			this.type = this.$typeSelect.val();
-      this.$settingsHolder.toggleClass('hidden', this.type === '');
+      		this.$settingsHolder.toggleClass('hidden', this.type === '');
 			this.$options.addClass('hidden');
 			this.$options.filter('.' + this.type).removeClass('hidden');
 		}

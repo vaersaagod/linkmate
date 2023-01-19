@@ -1,14 +1,24 @@
 {% import "_includes/forms" as forms %}
 
 {{ forms.checkboxSelectField({
-  label: '{elementName} sources'|t('linkmate', { 'elementName': elementName }),
+  label: '{elementName} sources'|t('linkmate', { elementName }),
   instructions: 'Select the available sources.'|t('linkmate'),
   id: 'typeSettings-'~linkTypeName~'-sources',
   name: 'typeSettings['~linkTypeName~'][sources]',
   options: sources,
-  values: settings.sources,
-  showAllOption: true,
+  values: settings.sources|default('*'),
+  showAllOption: true
 })}}
+
+{% if elementName|lower in ['entry', 'asset', 'category'] %}
+  {{ forms.checkboxField({
+    label: 'Allow {elementName} sources without URLs'|t('linkmate', { elementName: elementName|lower }),
+    warning: 'Only applies when "All" is selected for the {elementName} sources.'|t('linkmate', { elementName: elementName|lower }),
+    id: 'typeSettings-'~linkTypeName~'-allowSourcesWithoutUrls',
+    name: 'typeSettings['~linkTypeName~'][allowSourcesWithoutUrls]',
+    checked: settings.allowSourcesWithoutUrls
+  })}}
+{% endif %}
 
 {{ forms.checkboxField({
   label: 'Allow users to enter custom query strings and/or anchors that will be appended to the URL'|t('linkmate'),

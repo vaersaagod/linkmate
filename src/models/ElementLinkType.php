@@ -4,11 +4,13 @@ namespace vaersaagod\linkmate\models;
 
 use Craft;
 use craft\base\ElementInterface;
+use craft\elements\Asset;
+use craft\elements\Category;
+use craft\elements\Entry;
 use craft\errors\SiteNotFoundException;
 use craft\helpers\Html;
 
-use Exception;
-use Throwable;
+use craft\models\Section;
 
 use vaersaagod\linkmate\fields\LinkField;
 use vaersaagod\linkmate\utilities\ElementSourceValidator;
@@ -43,6 +45,7 @@ class ElementLinkType extends Model implements LinkTypeInterface
             'allowCustomQuery' => false,
             'showSiteMenu' => false,
             'sources' => '*',
+            'allowSourcesWithoutUrls' => false,
         ];
     }
 
@@ -119,10 +122,30 @@ class ElementLinkType extends Model implements LinkTypeInterface
      */
     public function getInputHtml(string $linkTypeName, LinkField $field, Link $value, ElementInterface $element = null): string
     {
-        $settings = $field->getLinkTypeSettings($linkTypeName, $this);
-        $sources = $settings['sources'];
+
         $isSelected = $value->type === $linkTypeName;
         $elements = $isSelected ? array_filter([$this->getElement($value)]) : null;
+        $elementType = $this->elementType;
+        $settings = $field->getLinkTypeSettings($linkTypeName, $this) + $this->getDefaultSettings();
+
+        [
+            'sources' => $sources,
+            'allowSourcesWithoutUrls' => $allowSourcesWithoutUrls,
+            'showSiteMenu' => $showSiteMenu,
+        ] = $settings;
+
+        if (empty($sources)) {
+            $sources = '*';
+        }
+
+        if ($sources === '*' && !$allowSourcesWithoutUrls) {
+            $sources = match ($elementType) {
+                Entry::class => $this->getSectionSources(),
+                Category::class => $this->getCategoryGroupSources(),
+                Asset::class => $this->getVolumeSources(),
+                default => $sources,
+            };
+        }
 
         $criteria = [
             'status' => null,
@@ -130,19 +153,19 @@ class ElementLinkType extends Model implements LinkTypeInterface
 
         try {
             $criteria['siteId'] = $this->getTargetSiteId($element);
-        } catch (Exception) {
+        } catch (\Throwable) {
         }
 
         $selectFieldOptions = [
             'criteria' => $criteria,
-            'elementType' => $this->elementType,
+            'elementType' => $elementType,
             'elements' => $elements,
             'id' => $field->handle.'-'.$linkTypeName,
             'limit' => 1,
             'name' => $field->handle.'['.$linkTypeName.']',
             'storageKey' => 'field.'.$field->handle,
             'sources' => $sources === '*' ? null : $sources,
-            'showSiteMenu' => $settings['showSiteMenu'] ?: false,
+            'showSiteMenu' => $showSiteMenu,
         ];
 
         $queryFieldOptions = null;
@@ -164,7 +187,7 @@ class ElementLinkType extends Model implements LinkTypeInterface
                 'queryFieldOptions' => $queryFieldOptions,
                 'selectFieldOptions' => $selectFieldOptions,
             ]);
-        } catch (Throwable $throwable) {
+        } catch (\Throwable $throwable) {
             $message = Craft::t(
                 'linkmate',
                 'Error: Could not render the template for the field `{name}`.',
@@ -218,13 +241,13 @@ class ElementLinkType extends Model implements LinkTypeInterface
                 'linkTypeName' => $linkTypeName,
                 'sources' => $this->getSources(),
             ]);
-        } catch (Throwable $throwable) {
+        } catch (\Throwable $throwable) {
             $message = Craft::t(
                 'linkmate',
                 'Error: Could not render the template for the field `{name}`.',
                 ['name' => $this->getDisplayName()]
             );
-            Craft::error($message . ' ' . $throwable->getMessage());
+            Craft::error($throwable, __METHOD__);
 
             return Html::tag('p', $message);
         }
@@ -245,6 +268,84 @@ class ElementLinkType extends Model implements LinkTypeInterface
         }
 
         return $options;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getSectionSources(): array
+    {
+
+        $sites = Craft::$app->getSites()->getAllSites();
+        $sections = Craft::$app->getSections()->getAllSections();
+
+        $sources = [];
+
+        foreach ($sections as $section) {
+
+            $sectionSiteSettings = $section?->getSiteSettings() ?? [];
+
+            foreach ($sites as $site) {
+                if (!isset($sectionSiteSettings[$site->id]) || !$sectionSiteSettings[$site->id]->hasUrls) {
+                    continue;
+                }
+                if ($section->type === Section::TYPE_SINGLE) {
+                    $sources[] = 'singles';
+                } else {
+                    $sources[] = 'section:' . $section->uid;
+                }
+            }
+        }
+
+        return array_unique($sources);
+    }
+
+    /**
+     * @return array
+     */
+    protected function getCategoryGroupSources(): array
+    {
+
+        $sites = Craft::$app->getSites()->getAllSites();
+        $categoryGroups = Craft::$app->getCategories()->getAllGroups();
+
+        $sources = [];
+
+        foreach ($categoryGroups as $categoryGroup) {
+
+            $sectionCategoryGroupSettings = $categoryGroup?->getSiteSettings() ?? [];
+
+            foreach ($sites as $site) {
+                if (!isset($sectionCategoryGroupSettings[$site->id]) || !$sectionCategoryGroupSettings[$site->id]->hasUrls) {
+                    continue;
+                }
+                $sources[] = 'group:' . $categoryGroup->uid;
+            }
+        }
+
+        return array_unique($sources);
+    }
+
+    /**
+     * @return array
+     */
+    protected function getVolumeSources(): array
+    {
+        $volumes = Craft::$app->getVolumes()->getAllVolumes();
+        $sources = [];
+        foreach ($volumes as $volume) {
+            try {
+                if ($volume->getFs()->hasUrls) {
+                    $sources[] = 'volume:' . $volume->uid;
+                }
+            } catch (\Throwable) {}
+        }
+
+        if (!empty($sources)) {
+            array_unshift($sources, '*');
+        }
+
+        return $sources;
     }
 
     /**
@@ -302,7 +403,7 @@ class ElementLinkType extends Model implements LinkTypeInterface
                 }
 
                 $url = (string)$baseUrl;
-            } catch (Throwable $error) {
+            } catch (\Throwable) {
             }
         }
 

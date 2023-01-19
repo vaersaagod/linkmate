@@ -1,6 +1,10 @@
 # Release Notes for LinkMate
 
 ## Unreleased
+### Added
+- Added the "Allow element sources without URLs" setting to entry, categories and asset link types. This setting applies when "All" is selected as the source for these element types.  
+### Changed
+- LinkMate now hides all sources without URLs, for entry, categories and asset link types where the source setting is set to "All". The new "Allow element sources without URLs" setting can be used to override this behavior.  
 ### Fixed
 - Fixed an issue where LinkMate could throw an exception if a Link had no LinkField instance set
 
