@@ -1,6 +1,6 @@
 # Release Notes for LinkMate
 
-## 2.3.0
+## 2.3.0 - 2023-01-20
 ### Added
 - Added the "Allow element sources without URLs" setting to entry, categories and asset link types. This setting applies when "All" is selected as the source for these element types.  
 ### Changed
