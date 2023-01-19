@@ -166,6 +166,7 @@ class ElementLinkType extends Model implements LinkTypeInterface
             'storageKey' => 'field.'.$field->handle,
             'sources' => $sources === '*' ? null : $sources,
             'showSiteMenu' => $showSiteMenu,
+            'selectionLabel' => \Craft::t('linkmate', 'Select'),
         ];
 
         $queryFieldOptions = null;
