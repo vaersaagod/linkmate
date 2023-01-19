@@ -92,7 +92,8 @@ class ElementLinkType extends Model implements LinkTypeInterface
             ->id($elementId);
 
         $settings = $link->getLinkField()?->getLinkTypeSettings($this->getDisplayName(), $this) ?? [];
-        if ($settings['showSiteMenu']) {
+
+        if ($settings['showSiteMenu'] ?? false) {
             $query
                 ->siteId('*')
                 ->unique()

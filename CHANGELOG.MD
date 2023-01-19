@@ -1,5 +1,9 @@
 # Release Notes for LinkMate
 
+## Unreleased
+### Fixed
+- Fixed an issue where LinkMate could throw an exception if a Link had no LinkField instance set
+
 ## 2.2.2 - 2022-08-02
 ### Fixed
 - Fixes typing issues in ElementSourceValidator
