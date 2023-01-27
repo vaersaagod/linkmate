@@ -207,7 +207,7 @@ class InputLinkType extends Model implements LinkTypeInterface
      */
     public function getText(Link $link): ?string
     {
-        return null;
+        return $this->getRawUrl($link);
     }
 
     /**
