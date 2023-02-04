@@ -435,7 +435,7 @@ class LinkField extends Field implements PreviewableFieldInterface
      */
     public static function displayName(): string
     {
-        return Craft::t('linkmate', 'LinkMate field');
+        return Craft::t('linkmate', 'LinkMate');
     }
 
     /**
