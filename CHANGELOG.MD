@@ -1,5 +1,9 @@
 # Release Notes for LinkMate
 
+## 2.4.0 - 2023-02-05
+### Added
+- LinkMate fields are now previewable in element indexes  
+
 ## 2.3.1 - 2023-01-27
 ### Changed
 - Input link types (email, phone, URL, custom) now return their raw URLs for the `getText()` method  
