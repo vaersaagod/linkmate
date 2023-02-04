@@ -5,14 +5,18 @@ namespace vaersaagod\linkmate\fields;
 use Craft;
 use craft\base\ElementInterface;
 use craft\base\Field;
+use craft\base\PreviewableFieldInterface;
+use craft\helpers\Html;
 use craft\helpers\Json;
-use Exception;
-use Throwable;
+
+use craft\helpers\StringHelper;
+use craft\helpers\UrlHelper;
 use vaersaagod\linkmate\helpers\MigrateHelper;
 use vaersaagod\linkmate\LinkMate;
 use vaersaagod\linkmate\models\Link;
 use vaersaagod\linkmate\models\LinkTypeInterface;
 use vaersaagod\linkmate\validators\LinkFieldValidator;
+
 use yii\db\Schema;
 
 /**
@@ -20,12 +24,12 @@ use yii\db\Schema;
  *
  * @package vaersaagod\linkmate\fields
  *
- * @property-read array[]             $elementValidationRules
- * @property-read string              $contentColumnType
+ * @property-read array[] $elementValidationRules
+ * @property-read string $contentColumnType
  * @property-read LinkTypeInterface[] $allowedLinkTypes
- * @property-read string              $settingsHtml
+ * @property-read string $settingsHtml
  */
-class LinkField extends Field
+class LinkField extends Field implements PreviewableFieldInterface
 {
 
     /**
@@ -128,7 +132,7 @@ class LinkField extends Field
     }
 
     /**
-     * @param mixed                 $value
+     * @param mixed $value
      * @param ElementInterface|null $element
      *
      * @return mixed
@@ -151,17 +155,17 @@ class LinkField extends Field
                 if (is_array($decodedValue)) {
                     $attr += $decodedValue;
                 }
-            } catch (Exception) {
+            } catch (\Throwable) {
             }
         } else if (is_array($value) && isset($value['isCpFormData'])) {
             // If it is an array and the field `isCpFormData` is set, we are saving a cp form
             $attr += [
                 'ariaLabel' => $this->enableAriaLabel && isset($value['ariaLabel']) ? $value['ariaLabel'] : null,
-                'customQuery' => isset($value['customQuery']) ? $value['customQuery'] : null,
+                'customQuery' => $value['customQuery'] ?? null,
                 'customText' => $this->allowCustomText && isset($value['customText']) ? $value['customText'] : null,
                 'target' => $this->allowTarget && isset($value['target']) ? $value['target'] : null,
                 'title' => $this->enableTitle && isset($value['title']) ? $value['title'] : null,
-                'type' => isset($value['type']) ? $value['type'] : null,
+                'type' => $value['type'] ?? null,
                 'value' => $this->getLinkValue($value)
             ];
         } else if (is_array($value)) {
@@ -229,11 +233,13 @@ class LinkField extends Field
     }
 
     /**
-     * @param Link                  $value
+     * @param $value
      * @param ElementInterface|null $element
-     *
      * @return string
-     * @throws Throwable
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     * @throws \yii\base\Exception
      */
     public function getInputHtml($value, ElementInterface $element = null): string
     {
@@ -276,7 +282,7 @@ class LinkField extends Field
     }
 
     /**
-     * @param string            $linkTypeName
+     * @param string $linkTypeName
      * @param LinkTypeInterface $linkType
      *
      * @return array
@@ -296,7 +302,10 @@ class LinkField extends Field
 
     /**
      * @return string
-     * @throws Throwable
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     * @throws \yii\base\Exception
      */
     public function getSettingsHtml(): string
     {
@@ -427,5 +436,24 @@ class LinkField extends Field
     public static function displayName(): string
     {
         return Craft::t('linkmate', 'LinkMate field');
+    }
+
+    /**
+     * @param mixed $value
+     * @param ElementInterface $element
+     * @return string
+     */
+    public function getTableAttributeHtml(mixed $value, ElementInterface $element): string
+    {
+        $url = (string)$value;
+        if (!$url) {
+            return '';
+        }
+        $url = Html::encode($url);
+        if (!UrlHelper::isFullUrl($url) && !str_starts_with($url, 'mailto:') && !str_starts_with($url, 'tel:')) {
+            return $url;
+        }
+        $label = StringHelper::truncate($url, 50);
+        return "<a href=\"$url\" target=\"_blank\" class=\"go\">$label</a>";
     }
 }
