@@ -68,6 +68,14 @@ class ElementLinkType extends Model implements LinkTypeInterface
     /**
      * @return string
      */
+    public function getRefHandle(): string
+    {
+        return $this->elementType::refHandle();
+    }
+
+    /**
+     * @return string
+     */
     public function getDisplayGroup(): string
     {
         return Craft::t('linkmate', $this->displayGroup);
@@ -94,7 +102,7 @@ class ElementLinkType extends Model implements LinkTypeInterface
         $query = $elementType::find()
             ->id($elementId);
 
-        $settings = $link->getLinkField()?->getLinkTypeSettings($this->getDisplayName(), $this) ?? [];
+        $settings = $link->getLinkField()?->getLinkTypeSettings($this->getRefHandle(), $this) ?? [];
 
         if ($settings['showSiteMenu'] ?? false) {
             $query

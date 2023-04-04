@@ -1,5 +1,9 @@
 # Release Notes for LinkMate
 
+## 2.4.1 - 2023-04-04
+### Fixed  
+- Fixes a multi-site issue due to `Element::displayName()` being translated under the hood.  
+
 ## 2.4.0 - 2023-02-05
 ### Added
 - LinkMate fields are now previewable in element indexes  

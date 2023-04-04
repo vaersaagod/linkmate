@@ -10,7 +10,7 @@
   showAllOption: true
 })}}
 
-{% if elementName|lower in ['entry', 'asset', 'category'] %}
+{% if linkTypeName|lower in ['entry', 'asset', 'category'] %}
   {{ forms.checkboxField({
     label: 'Allow {elementName} sources without URLs'|t('linkmate', { elementName: elementName|lower }),
     warning: 'Only applies when "All" is selected for the {elementName} sources.'|t('linkmate', { elementName: elementName|lower }),
@@ -28,7 +28,7 @@
   checked: settings.allowCustomQuery
 }) }}
 
-{% if elementName|lower != 'user' %}
+{% if linkTypeName|lower != 'user' %}
 
   {{ forms.checkboxField({
     fieldset: true,
