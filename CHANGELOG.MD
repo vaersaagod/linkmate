@@ -1,5 +1,9 @@
 # Release Notes for LinkMate
 
+## 2.5.0 - 2023-10-19
+### Added  
+- Link fields' custom text and linked element titles will now be added to Craft's search index, provided the field has the "Use this field’s values as search keywords" field setting enabled.  
+
 ## 2.4.1 - 2023-04-04
 ### Fixed  
 - Fixes a multi-site issue due to `Element::displayName()` being translated under the hood.  
