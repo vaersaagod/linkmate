@@ -1,5 +1,8 @@
 # Release Notes for LinkMate
 
+## 2.5.0.1 - 2023-10-20
+- Fix exception that could be thrown when getting search keywords for link fields
+
 ## 2.5.0 - 2023-10-19
 ### Added  
 - Link fields' custom text and linked element titles will now be added to Craft's search index, provided the field has the "Use this field’s values as search keywords" field setting enabled.  
