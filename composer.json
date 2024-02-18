@@ -2,7 +2,7 @@
     "name": "vaersaagod/linkmate",
     "description": "Let's hook you up, mate!",
     "type": "craft-plugin",
-    "version": "2.5.0.1",
+    "version": "2.5.1",
     "keywords": [
         "craft",
         "cms",

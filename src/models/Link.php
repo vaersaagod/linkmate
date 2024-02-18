@@ -344,13 +344,12 @@ class Link extends Model
             return $this->customText;
         }
 
-        $linkText = $this->getLinkType()?->getText($this);
-
-        if (!empty($linkText)) {
-            return $linkText;
+        $defaultText = Craft::t('site', $this->getDefaultText());
+        if (!empty($defaultText)) {
+            return $defaultText;
         }
 
-        return Craft::t('site', $this->getDefaultText());
+        return $this->getLinkType()?->getText($this);
     }
 
     /**

@@ -1,6 +1,11 @@
 # Release Notes for LinkMate
 
+## 2.5.1 - 2024-02-18
+### Fixed
+- Fixes an issue where Link fields' default text would, realistically, never render  
+
 ## 2.5.0.1 - 2023-10-20
+### Fixed
 - Fix exception that could be thrown when getting search keywords for link fields
 
 ## 2.5.0 - 2023-10-19
