@@ -99,6 +99,14 @@ class LinkField extends Field implements PreviewableFieldInterface
 
 
     /**
+     * @inerhitdoc 
+     */
+    public static function icon(): string
+    {
+        return 'link';
+    }
+    
+    /**
      * @param bool $isNew
      *
      * @return bool
@@ -118,17 +126,6 @@ class LinkField extends Field implements PreviewableFieldInterface
         }
 
         return parent::beforeSave($isNew);
-    }
-
-    /**
-     * Get Content Column Type
-     * Used to set the correct column type in the DB
-     *
-     * @return string
-     */
-    public function getContentColumnType(): string
-    {
-        return Schema::TYPE_TEXT;
     }
 
     /**
@@ -241,7 +238,7 @@ class LinkField extends Field implements PreviewableFieldInterface
      * @throws \Twig\Error\SyntaxError
      * @throws \yii\base\Exception
      */
-    public function getInputHtml($value, ElementInterface $element = null): string
+    public function getInputHtml(mixed $value, ?\craft\base\ElementInterface $element = null): string
     {
         $linkTypes = $this->getAllowedLinkTypes();
         $linkNames = [];
@@ -358,7 +355,7 @@ class LinkField extends Field implements PreviewableFieldInterface
     /**
      * @inheritdoc
      */
-    public function getStaticHtml($value, ElementInterface $element): string
+    public function getStaticHtml(mixed $value, ElementInterface $element): string
     {
         $this->isStatic = true;
         $result = parent::getStaticHtml($value, $element);
@@ -393,7 +390,7 @@ class LinkField extends Field implements PreviewableFieldInterface
      *
      * @return bool
      */
-    public function isValueEmpty($value, ElementInterface $element): bool
+    public function isValueEmpty(mixed $value, ElementInterface $element): bool
     {
         if ($value instanceof Link) {
             return $value->isEmpty();
@@ -443,7 +440,7 @@ class LinkField extends Field implements PreviewableFieldInterface
      * @param ElementInterface $element
      * @return string
      */
-    public function getTableAttributeHtml(mixed $value, ElementInterface $element): string
+    public function getPreviewHtml(mixed $value, ElementInterface $element): string
     {
         $url = (string)$value;
         if (!$url) {

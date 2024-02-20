@@ -286,7 +286,7 @@ class ElementLinkType extends Model implements LinkTypeInterface
     {
 
         $sites = Craft::$app->getSites()->getAllSites();
-        $sections = Craft::$app->getSections()->getAllSections();
+        $sections = Craft::$app->getEntries()->getAllSections();
 
         $sources = [];
 
