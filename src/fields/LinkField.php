@@ -5,6 +5,7 @@ namespace vaersaagod\linkmate\fields;
 use Craft;
 use craft\base\ElementInterface;
 use craft\base\Field;
+use craft\base\MergeableFieldInterface;
 use craft\base\PreviewableFieldInterface;
 use craft\helpers\Html;
 use craft\helpers\Json;
@@ -29,7 +30,7 @@ use yii\db\Schema;
  * @property-read LinkTypeInterface[] $allowedLinkTypes
  * @property-read string $settingsHtml
  */
-class LinkField extends Field implements PreviewableFieldInterface
+class LinkField extends Field implements PreviewableFieldInterface, MergeableFieldInterface
 {
 
     /**
