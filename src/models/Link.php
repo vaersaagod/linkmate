@@ -12,6 +12,7 @@ use craft\models\Site;
 use Exception;
 use Twig\Markup;
 use vaersaagod\linkmate\fields\LinkField;
+use vaersaagod\linkmate\helpers\LinkHelper;
 use vaersaagod\linkmate\LinkMate;
 
 /**
@@ -387,8 +388,13 @@ class Link extends Model
     public function getUrl(): ?string
     {
         $linkType = $this->getLinkType();
+        if (is_null($linkType)) {
+            return null;
+        }
 
-        return is_null($linkType) ? null : $linkType->getUrl($this);
+        // Reject URLs with unsafe schemes (e.g. `javascript:`) before they can
+        // ever reach an `href` attribute.
+        return LinkHelper::sanitizeUrl($linkType->getUrl($this));
     }
 
     /**
