@@ -1,8 +1,10 @@
 # Release Notes for LinkMate
 
-## Unreleased
+## 3.0.0 - 2026-07-03
 ### Fixed
 - Fixed a security issue
+### Changed
+- LinkMate now requires Craft 5.10+
 
 ## 3.0.0-beta.2 - 2024-08-29
 ### Added
