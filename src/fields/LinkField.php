@@ -18,8 +18,6 @@ use vaersaagod\linkmate\models\Link;
 use vaersaagod\linkmate\models\LinkTypeInterface;
 use vaersaagod\linkmate\validators\LinkFieldValidator;
 
-use yii\db\Schema;
-
 /**
  * Class LinkField
  *
@@ -100,13 +98,13 @@ class LinkField extends Field implements PreviewableFieldInterface, MergeableFie
 
 
     /**
-     * @inerhitdoc 
+     * @inerhitdoc
      */
     public static function icon(): string
     {
         return 'link';
     }
-    
+
     /**
      * @param bool $isNew
      *
@@ -180,7 +178,7 @@ class LinkField extends Field implements PreviewableFieldInterface, MergeableFie
 
         return new Link(array_filter(
             $attr,
-            static function($key) {
+            static function ($key) {
                 return in_array($key, [
                     'ariaLabel',
                     'customQuery',
@@ -214,7 +212,7 @@ class LinkField extends Field implements PreviewableFieldInterface, MergeableFie
         }
 
         return array_filter($linkTypes,
-            static function($linkTypeName) use ($allowedLinkNames) {
+            static function ($linkTypeName) use ($allowedLinkNames) {
                 return in_array($linkTypeName, $allowedLinkNames, true);
             },
             ARRAY_FILTER_USE_KEY);
@@ -337,7 +335,7 @@ class LinkField extends Field implements PreviewableFieldInterface, MergeableFie
         }
 
         asort($linkNames);
-        usort($linkTypes, static function($a, $b) {
+        usort($linkTypes, static function ($a, $b) {
             return $a['group'] === $b['group']
                 ? strcmp($a['displayName'], $b['displayName'])
                 : strcmp($a['group'], $b['group']);
