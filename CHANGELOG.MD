@@ -3,6 +3,8 @@
 ## Unreleased
 ### Added
 - Added an “is empty” / “is not empty” condition rule for LinkMate fields, for field layout conditions and element index filters
+### Changed
+- A link saved without a value now keeps its link type in the field input, instead of switching to the field’s default link type
 
 ## 3.0.0 - 2026-07-03
 ### Fixed

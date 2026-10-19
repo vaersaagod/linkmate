@@ -245,17 +245,13 @@ class LinkField extends Field implements PreviewableFieldInterface, MergeableFie
         $linkInputs = [];
         $singleType = count($linkTypes) === 1 ? array_keys($linkTypes)[0] : null;
 
+        // Only fall back to the default link type when no allowed type is stored, so that a link
+        // saved without a value (e.g. a deliberately empty one) keeps the type it was saved with
         if (!array_key_exists($value->type, $linkTypes) && count($linkTypes) > 0) {
-            $value->type = array_keys($linkTypes)[0];
+            $value->type = !empty($this->defaultLinkName) && array_key_exists($this->defaultLinkName, $linkTypes)
+                ? $this->defaultLinkName
+                : array_keys($linkTypes)[0];
             $value->value = null;
-        }
-
-        if (
-            !empty($this->defaultLinkName) &&
-            array_key_exists($this->defaultLinkName, $linkTypes) &&
-            $value->isEmpty()
-        ) {
-            $value->type = $this->defaultLinkName;
         }
 
         foreach ($linkTypes as $linkTypeName => $linkType) {
