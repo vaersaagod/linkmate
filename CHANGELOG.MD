@@ -1,6 +1,6 @@
 # Release Notes for LinkMate
 
-## Unreleased
+## 3.1.0 - 2026-10-19
 ### Added
 - Added an “is empty” / “is not empty” condition rule for LinkMate fields, for field layout conditions and element index filters
 ### Changed
