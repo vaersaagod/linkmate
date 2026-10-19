@@ -12,6 +12,7 @@ use craft\helpers\Json;
 use craft\helpers\StringHelper;
 use craft\helpers\UrlHelper;
 
+use vaersaagod\linkmate\conditions\LinkFieldConditionRule;
 use vaersaagod\linkmate\helpers\MigrateHelper;
 use vaersaagod\linkmate\LinkMate;
 use vaersaagod\linkmate\models\Link;
@@ -361,6 +362,14 @@ class LinkField extends Field implements PreviewableFieldInterface, MergeableFie
         $this->isStatic = false;
 
         return $result;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getElementConditionRuleType(): array|string|null
+    {
+        return LinkFieldConditionRule::class;
     }
 
     /**
